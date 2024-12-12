@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    `maven-publish`
 }
 
 android {
@@ -32,8 +33,31 @@ android {
     }
 }
 
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "org.edx"
+            artifactId = "segment-analytics"
+            version = "1.0.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+
+            // Include metadata if needed
+            pom {
+                name = "Segment Analytics Plugin"
+                description =
+                    "This plugin aims to provide Segment analytics support for OpenEdX Application"
+                url = "https://github.com/farhan-arshad-dev/edx-mobile-android-segment-analytics"
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(libs.foundation)
+
     implementation(libs.segment.analytics.kotlin)
     implementation(libs.segment.destination.firebase)
     implementation(libs.braze.segment.kotlin)
